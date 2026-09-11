@@ -32,6 +32,14 @@ jobs:
         run: |
           rm -rf android
           flutter create --platforms=android --org com.habittracker --project-name habit_tracker_app .
+          
+          # Fix Kotlin version to 1.9.24
+          if [ -f android/settings.gradle ]; then
+            sed -i -E 's/"org.jetbrains.kotlin.android" version "[^"]*"/"org.jetbrains.kotlin.android" version "1.9.24"/' android/settings.gradle
+          fi
+          if [ -f android/build.gradle ]; then
+            sed -i -E "s/ext.kotlin_version = '[^']*'/ext.kotlin_version = '1.9.24'/" android/build.gradle
+          fi
 
       - name: Get Flutter dependencies
         working-directory: habit_tracker_app
@@ -39,7 +47,7 @@ jobs:
 
       - name: Build Android Release APK
         working-directory: habit_tracker_app
-        run: flutter build apk --release
+        run: flutter build apk --release --no-tree-shake-icons
 
       - name: Upload Release APK as Artifact
         uses: actions/upload-artifact@v4
