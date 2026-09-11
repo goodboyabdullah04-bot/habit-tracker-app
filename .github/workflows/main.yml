@@ -27,6 +27,12 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Generate complete Android project scaffolding
+        working-directory: habit_tracker_app
+        run: |
+          rm -rf android
+          flutter create --platforms=android --org com.habittracker --project-name habit_tracker_app .
+
       - name: Get Flutter dependencies
         working-directory: habit_tracker_app
         run: flutter pub get
@@ -39,5 +45,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Habit_Tracker_App_v1.0
-          path: habit_tracker_app/build/app/outputs/flutter-apk/app-release.apk
+          path: habit_tracker_app/build/app/outputs/**/app*release*.apk
           if-no-files-found: error
